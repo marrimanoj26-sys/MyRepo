@@ -1,0 +1,42 @@
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class S3ObjectContentReader {
+
+    public static void main(String[] args) {
+        String bucketName = "your-s3-bucket-name"; // Replace with your bucket name
+        String key = "your-s3-object-key"; // Replace with your object key
+
+        Region region = Region.US_EAST_1; // Replace with your S3 bucket's region
+        S3Client s3Client = S3Client.builder()
+                .region(region)
+                .build();
+
+        try {
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+
+            s3Client.getObject(getObjectRequest, (asyncResponse, inputStream) -> {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                    String line;
+                    System.out.println("Content of S3 object '" + key + "':");
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error reading S3 object content: " + e.getMessage());
+                }
+            });
+
+        } catch (Exception e) {
+            System.err.println("Error accessing S3 object: " + e.getMessage());
+        } finally {
+            s3Client.close();
+        }
+    }
+}
