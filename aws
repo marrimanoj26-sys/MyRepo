@@ -8,7 +8,7 @@ class Main {
       System.out.print(firstTerm + ", ");
 
       // compute the next term
-      int nextTerm = firstTerm + secondTerm;
+      int nextTerm = firstTerm + secondTeadfFASDSDrm;
       firstTerm = secondTerm;
       secondTerm = nextTerm;
     }
